@@ -2,6 +2,7 @@
 //#include "common/common.h"
 //#include "protocol.h"
 #include "mavlink.h"
+#include "millis.h"
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wmissing-noreturn"
@@ -69,7 +70,7 @@ void mav_set_mode() {
     SerialMAV.write(buf, len);
 }
 
-void mav_arm_pack(boolean state) {
+void mav_arm_pack(bool state) {
     mavlink_message_t msg;
     uint8_t buf[MAVLINK_MAX_PACKET_LEN];
 
@@ -104,7 +105,7 @@ void comm_receive() {
         // Try to get a new message
         if(mavlink_parse_char(MAVLINK_COMM_0, c, &msg, &status)) {
             //Indicates data flow
-            Serial.println("+");
+            pc.printf("+");
             // Handle message
             switch(msg.msgid) {
                 case MAVLINK_MSG_ID_HEARTBEAT:  // #0: Heartbeat
@@ -288,6 +289,7 @@ int main() {
     char buf[10];
     char msg[] = "Slave!";
     myHigh.write(1);
+    millisStart();
     pc.printf("Hello everyone :D\n");
 
     while (1) {
